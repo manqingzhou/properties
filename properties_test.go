@@ -1051,6 +1051,20 @@ func TestFilterFunc(t *testing.T) {
 	assert.Equal(t, pp.Map(), m)
 }
 
+func TestFilterFuncAll(t *testing.T) {
+	input := "key=value\nabc=def"
+	p := mustParse(t, input)
+
+	inScope := func(k, v string) bool { return k == "key" || k == "abc" }
+	notAbc := func(k, v string) bool { return k != "abc" }
+
+	// A key is only kept if it passes *all* filters, independent of the
+	// order in which the filters are supplied.
+	want := map[string]string{"key": "value"}
+	assert.Equal(t, p.FilterFunc(inScope, notAbc).Map(), want)
+	assert.Equal(t, p.FilterFunc(notAbc, inScope).Map(), want)
+}
+
 func TestLoad(t *testing.T) {
 	x := "key=${value}\nvalue=${key}"
 	p := NewProperties()

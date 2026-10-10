@@ -780,8 +780,8 @@ outer:
 			if !f(k, v) {
 				continue outer
 			}
-			pp.Set(k, v)
 		}
+		pp.Set(k, v)
 	}
 	return pp
 }
